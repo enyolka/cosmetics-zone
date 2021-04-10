@@ -3,10 +3,8 @@ package com.example.cosmeticszone
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
@@ -25,7 +23,7 @@ class ProductTypeActivity : AppCompatActivity() {
             Pair("Foundation", ""), Pair("Lip liner", ""), Pair("Lipstick", ""), Pair("Mascara", ""), Pair("Nail Polish", ""))
         queue = Volley.newRequestQueue(this)
 
-        productsTypeList = findViewById(R.id.productTypeRecycler)
+        productsTypeList = findViewById(R.id.productTypesRecycler)
         belovedButton = findViewById(R.id.belovedButton)
 
         adapter = ProductTypeAdapter(productTypes, this)

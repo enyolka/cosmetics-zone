@@ -9,15 +9,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ProductListAdapter(var dataSet: Array<ProductDetails>, val context: Context)  : RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
+class ProductListAdapter(var dataSet: Array<Pair<String, String>>, val context: Context)  : RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var productTypeTextView: TextView
         val productTypeImage: ImageView
 
         init {
             // Define click listener for the ViewHolder's View.
-            productTypeTextView = view.findViewById(R.id.textTypeView)
-            productTypeImage = view.findViewById(R.id.imageTypeView)
+            productTypeTextView = view.findViewById(R.id.productNameView)
+            productTypeImage = view.findViewById(R.id.imageProductView)
         }
     }
 
@@ -25,7 +25,7 @@ class ProductListAdapter(var dataSet: Array<ProductDetails>, val context: Contex
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ProductListAdapter.ViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
-                .inflate(R.layout.custom_grid_layout, viewGroup, false)
+                .inflate(R.layout.custom_grid_product_layout, viewGroup, false)
 
         return ViewHolder(view)
     }
@@ -37,15 +37,15 @@ class ProductListAdapter(var dataSet: Array<ProductDetails>, val context: Contex
         // contents of the view with that element
         val product = dataSet[position]
 
-//        viewHolder.productTypeTextView = product.product_type
-//        viewHolder.productTypeImage.setImageResource(product.image_link)
-//
-//        viewHolder.itemView.setOnClickListener { goToDetails(product.product_type) }
+        viewHolder.productTypeTextView.text = product.first
+        viewHolder.productTypeImage.setImageResource(android.R.drawable.ic_menu_crop)
+
+        viewHolder.itemView.setOnClickListener { goToDetails(10) }
     }
 
-    private fun goToDetails(productType: String) {
+    private fun goToDetails(productID: Int) {
         val intent = Intent(context, ProductListActivity::class.java).apply {
-            putExtra("productType", productType)
+            putExtra("productInfo", productID)
         }
         context.startActivity(intent)
     }

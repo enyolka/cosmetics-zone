@@ -2,8 +2,6 @@ package com.example.cosmeticszone
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +16,8 @@ class ProductTypeAdapter(var dataSet: Array<Pair<String,String>>, val context: C
 
         init {
             // Define click listener for the ViewHolder's View.
-            productTypeTextView = view.findViewById(R.id.textTypeView)
-            productTypeImage = view.findViewById(R.id.imageTypeView)
+            productTypeTextView = view.findViewById(R.id.productNameView)
+            productTypeImage = view.findViewById(R.id.imageProductView)
         }
     }
 
