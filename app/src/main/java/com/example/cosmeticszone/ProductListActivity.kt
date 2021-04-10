@@ -47,11 +47,10 @@ class ProductListActivity : AppCompatActivity() {
     }
 
     fun makeRequest(productType: String) {
-        queue = Volley.newRequestQueue(this)
-
+        //queue = Volley.newRequestQueue(this)
         val url = "http://makeup-api.herokuapp.com/api/v1/products.json?product_type=$productType"
 
-        val currenciesListRequest = JsonArrayRequest(
+        val productListRequest = JsonArrayRequest(
             Request.Method.GET, url, null,
             Response.Listener {
                     response ->
@@ -63,7 +62,7 @@ class ProductListActivity : AppCompatActivity() {
                 println("Error")
             }
         )
-        queue.add(currenciesListRequest)
+        queue.add(productListRequest)
     }
 
     fun loadData(response: JSONArray?) {
