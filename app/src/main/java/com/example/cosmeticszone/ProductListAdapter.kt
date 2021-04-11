@@ -9,15 +9,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ProductListAdapter(var dataSet: Array<Pair<String, String>>, val context: Context)  : RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
+class ProductListAdapter(var dataSet: Array<Triple<String, String, String>>, val context: Context)  : RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var productTypeTextView: TextView
-        val productTypeImage: ImageView
+        var productTextView: TextView
+        var brandTextView: TextView
+        val productImage: ImageView
 
         init {
             // Define click listener for the ViewHolder's View.
-            productTypeTextView = view.findViewById(R.id.productNameView)
-            productTypeImage = view.findViewById(R.id.imageProductView)
+            productTextView = view.findViewById(R.id.productNameView)
+            brandTextView = view.findViewById(R.id.brandNameView)
+            productImage = view.findViewById(R.id.imageProductView)
         }
     }
 
@@ -37,8 +39,9 @@ class ProductListAdapter(var dataSet: Array<Pair<String, String>>, val context: 
         // contents of the view with that element
         val product = dataSet[position]
 
-        viewHolder.productTypeTextView.text = product.first
-        viewHolder.productTypeImage.setImageResource(android.R.drawable.ic_menu_crop)
+        viewHolder.productTextView.text = product.first
+        viewHolder.brandTextView.text = product.second
+        viewHolder.productImage.setImageResource(android.R.drawable.ic_menu_crop)
 
         viewHolder.itemView.setOnClickListener { goToDetails(10) }
     }

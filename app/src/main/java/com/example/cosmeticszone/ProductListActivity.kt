@@ -1,19 +1,20 @@
 package com.example.cosmeticszone
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONArray
+
 
 class ProductListActivity : AppCompatActivity() {
     private lateinit var queue: RequestQueue
@@ -22,7 +23,7 @@ class ProductListActivity : AppCompatActivity() {
     internal lateinit var belovedButton: ImageView
     internal lateinit var productType: String
     internal lateinit var info: TextView
-    internal var listData: Array<Pair<String, String>> = emptyArray()
+    internal var listData: Array<Triple<String, String, String>> = emptyArray()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,33 +56,39 @@ class ProductListActivity : AppCompatActivity() {
             Request.Method.GET, url, null,
             Response.Listener {
                     response ->
-                println("Success")
-//                loadData(response)
-//                adapter.dataSet = listData
-//                adapter.notifyDataSetChanged()
+                loadData(response)
+                adapter.dataSet = listData
+                adapter.notifyDataSetChanged()
             },
             Response.ErrorListener {
                 println(it)
                 println("Error")
             }
         )
+        productListRequest.retryPolicy = DefaultRetryPolicy(
+            5000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+
         queue.add(productListRequest)
     }
 
     fun loadData(response: JSONArray?) {
         response?.let {
             val respCount = response.length()
-            val tmpData = arrayOfNulls<Pair<String, String>>(respCount)
+            val tmpData = arrayOfNulls<Triple<String, String, String>>(respCount)
 
             for (i in 0 until respCount) {
                 val productName = response.getJSONObject(i).getString("name")
+                val brandName = response.getJSONObject(i).getString("brand")
                 val productImage = response.getJSONObject(i).getString("image_link")
-                val currencyObject = Pair(productName, productImage)//CurrencyDetails(currencyCode, currencyRate, flag, table, rise)
+                val productObject = Triple(productName, brandName, productImage)//CurrencyDetails(currencyCode, currencyRate, flag, table, rise)
 
-                tmpData[i] = currencyObject
+                tmpData[i] = productObject
             }
 
-            this.listData += tmpData as Array<Pair<String, String>>
+            this.listData += tmpData as Array<Triple<String, String, String>>
         }
     }
 }
