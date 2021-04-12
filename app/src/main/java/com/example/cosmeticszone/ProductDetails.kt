@@ -1,4 +1,4 @@
 package com.example.cosmeticszone
 
-class ProductDetails(id: Int, name: String, brand: String, price: String, description: String, category: String, type: String) {
+class ProductDetails(val id: Int, val apiID:Int, val name: String, val brand: String, val price: String, val imageLink: String, val type: String) {
 }

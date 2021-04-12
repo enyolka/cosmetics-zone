@@ -23,7 +23,7 @@ class ProductListActivity : AppCompatActivity() {
     internal lateinit var belovedButton: ImageView
     internal lateinit var productType: String
     internal lateinit var info: TextView
-    internal var listData: Array<Triple<String, String, String>> = emptyArray()
+    internal var listData: Array<ProductDetails> = emptyArray()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,18 +77,22 @@ class ProductListActivity : AppCompatActivity() {
     fun loadData(response: JSONArray?) {
         response?.let {
             val respCount = response.length()
-            val tmpData = arrayOfNulls<Triple<String, String, String>>(respCount)
+            val tmpData = arrayOfNulls<ProductDetails>(respCount)
 
             for (i in 0 until respCount) {
+                val apiID = response.getJSONObject(i).getInt("id")
                 val productName = response.getJSONObject(i).getString("name")
                 val brandName = response.getJSONObject(i).getString("brand")
+                val price = response.getJSONObject(i).getString("price")
                 val productImage = response.getJSONObject(i).getString("image_link")
-                val productObject = Triple(productName, brandName, productImage)//CurrencyDetails(currencyCode, currencyRate, flag, table, rise)
+//                val productObject = Triple(productName, brandName, productImage)//CurrencyDetails(currencyCode, currencyRate, flag, table, rise)
+                val productObject = ProductDetails(id=0, apiID = apiID, name = productName, brand = brandName, price=price, imageLink = productImage, type = this.productType)
 
                 tmpData[i] = productObject
             }
 
-            this.listData += tmpData as Array<Triple<String, String, String>>
+//            this.listData += tmpData as Array<Triple<String, String, String>>
+            this.listData += tmpData as Array<ProductDetails>
         }
     }
 }
