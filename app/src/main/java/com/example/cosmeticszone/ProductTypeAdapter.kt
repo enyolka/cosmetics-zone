@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ProductTypeAdapter(var dataSet: Array<Pair<String,String>>, val context: Context) : RecyclerView.Adapter<ProductTypeAdapter.ViewHolder>() {
+class ProductTypeAdapter(var dataSet: Array<Pair<String,Int>>, val context: Context) : RecyclerView.Adapter<ProductTypeAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var productTypeTextView: TextView
         val productTypeImage: ImageView
@@ -38,7 +38,8 @@ class ProductTypeAdapter(var dataSet: Array<Pair<String,String>>, val context: C
         val product = dataSet[position]
 
         viewHolder.productTypeTextView.text = product.first
-        viewHolder.productTypeImage.setImageResource(android.R.drawable.ic_menu_crop)
+//        viewHolder.productTypeImage.setImageResource(android.R.drawable.ic_menu_crop)
+        viewHolder.productTypeImage.setImageResource(product.second)
 
         viewHolder.itemView.setOnClickListener { goToDetails(product.first) }
     }
