@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
-class ProductListAdapter(var dataSet: Array<Triple<String, String, String>>, val context: Context)  : RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
+class ProductListAdapter(var dataSet: Array<ProductDetails>, val context: Context)  : RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var productTextView: TextView
         var brandTextView: TextView
@@ -39,16 +40,20 @@ class ProductListAdapter(var dataSet: Array<Triple<String, String, String>>, val
         // contents of the view with that element
         val product = dataSet[position]
 
-        viewHolder.productTextView.text = product.first
-        viewHolder.brandTextView.text = product.second
-        viewHolder.productImage.setImageResource(android.R.drawable.ic_menu_crop)
+        viewHolder.productTextView.text = product.name
+        viewHolder.brandTextView.text = product.brand
+//        viewHolder.productImage.setImageResource(android.R.drawable.ic_menu_crop)
+        Glide.with(context).load(product.imageLink).into(viewHolder.productImage);
 
-        viewHolder.itemView.setOnClickListener { goToDetails(10) }
+        viewHolder.itemView.setOnClickListener { goToDetails(product.apiID, product.brand, product.type, product.name) }
     }
 
-    private fun goToDetails(productID: Int) {
-        val intent = Intent(context, ProductListActivity::class.java).apply {
-            putExtra("productInfo", productID)
+    private fun goToDetails(productID: Int, productBrand: String, productType: String, productName: String) {
+        val intent = Intent(context, ProductInfoActivity::class.java).apply {
+            putExtra("productApiId", productID)
+            putExtra("productBrand", productBrand)
+            putExtra("productType", productType)
+            putExtra("productName", productName)
         }
         context.startActivity(intent)
     }
