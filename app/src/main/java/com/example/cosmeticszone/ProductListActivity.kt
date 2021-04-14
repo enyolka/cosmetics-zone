@@ -85,8 +85,8 @@ class ProductListActivity : AppCompatActivity() {
                 val brandName = response.getJSONObject(i).getString("brand")
                 val price = response.getJSONObject(i).getString("price")
                 val productImage = response.getJSONObject(i).getString("image_link")
-//                val productObject = Triple(productName, brandName, productImage)//CurrencyDetails(currencyCode, currencyRate, flag, table, rise)
-                val productObject = ProductDetails(id=0, apiID = apiID, name = productName, brand = brandName, price=price, imageLink = productImage, type = this.productType)
+
+                val productObject = ProductDetails(id=0, apiID = apiID, name = productName, brand = brandName, price=price, imageLink = productImage, type = this.productType)//, description = description, rate = rate, product_link = product_link, website_link = website_link)
 
                 tmpData[i] = productObject
             }

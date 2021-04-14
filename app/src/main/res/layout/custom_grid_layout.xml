@@ -37,7 +37,7 @@
                 tools:srcCompat="@tools:sample/avatars[2]" />
 
             <TextView
-                android:id="@+id/productNameView"
+                android:id="@+id/productNameListView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"

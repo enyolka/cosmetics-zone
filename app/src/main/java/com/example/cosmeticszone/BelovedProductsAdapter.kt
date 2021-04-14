@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
@@ -20,8 +19,8 @@ class BelovedProductsAdapter(val context: Context, val dataSet: ArrayList<Produc
 
         init {
             // Define click listener for the ViewHolder's View.
-            productTextView = view.findViewById(R.id.productNameView)
-            brandTextView = view.findViewById(R.id.brandNameView)
+            productTextView = view.findViewById(R.id.productNameListView)
+            brandTextView = view.findViewById(R.id.brandNameListView)
             productImage = view.findViewById(R.id.imageProductView)
         }
     }

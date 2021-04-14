@@ -40,7 +40,7 @@
                 tools:srcCompat="@tools:sample/avatars[2]" />
 
             <TextView
-                android:id="@+id/productNameView"
+                android:id="@+id/productNameListView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -48,13 +48,13 @@
                 android:layout_marginBottom="4dp"
                 android:text="Product Name"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/brandNameView"
+                app:layout_constraintBottom_toTopOf="@+id/brandNameListView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageProductView"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/brandNameView"
+                android:id="@+id/brandNameListView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -66,7 +66,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.1"
                 app:layout_constraintStart_toEndOf="@+id/imageProductView"
-                app:layout_constraintTop_toBottomOf="@+id/productNameView" />
+                app:layout_constraintTop_toBottomOf="@+id/productNameListView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
