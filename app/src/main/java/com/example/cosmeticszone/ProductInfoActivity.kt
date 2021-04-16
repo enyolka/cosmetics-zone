@@ -1,7 +1,11 @@
 package com.example.cosmeticszone
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -11,19 +15,22 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
+import com.squareup.picasso.Picasso
 import org.json.JSONArray
+import org.jsoup.Jsoup
 import java.lang.Exception
-import java.security.spec.ECField
 
 class ProductInfoActivity : AppCompatActivity() {
     private lateinit var queue: RequestQueue
     internal lateinit var product: ProductDetails
     internal lateinit var buttonBeloved: ImageView
     internal lateinit var name: TextView
+    internal lateinit var image: ImageView
     internal lateinit var brand: TextView
     internal lateinit var price: TextView
     internal lateinit var description: TextView
     internal lateinit var rate: TextView
+    internal lateinit var link: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +41,12 @@ class ProductInfoActivity : AppCompatActivity() {
         buttonBeloved = findViewById(R.id.buttonAddBeloved)
         name = findViewById(R.id.productNameView)
         brand = findViewById(R.id.brandNameView)
+        image = findViewById(R.id.productImageView)
         price = findViewById(R.id.priceView)
         description = findViewById(R.id.descriptionView)
+        description.movementMethod = ScrollingMovementMethod()
         rate = findViewById(R.id.rateView)
+        link = findViewById(R.id.productLinkButton)
 
         name.text = intent.getStringExtra("productName") ?: ""
         var productBrand = intent.getStringExtra("productBrand") ?: ""
@@ -97,17 +107,29 @@ class ProductInfoActivity : AppCompatActivity() {
 
             for (i in 0 until respCount) {
                 val apiID = response.getJSONObject(i).getInt("id")
-                val productName = response.getJSONObject(i).getString("name")
                 val brandName = response.getJSONObject(i).getString("brand")
-                val productPrice = response.getJSONObject(i).getString("price")
-                val productImage = response.getJSONObject(i).getString("image_link")
                 val productType = response.getJSONObject(i).getString("product_type")
-//                val product_link = response.getJSONObject(i).getString("product_link")
-//                val website_link = response.getJSONObject(i).getString("website_link")
+                val productName = (response.getJSONObject(i).getString("name")).replace("\\s+".toRegex(), " ");
+                val productPrice = response.getJSONObject(i).getString("price")
+                val priceSign = response.getJSONObject(i).getString("price_sign") ?: "$"
+                val productImage = response.getJSONObject(i).getString("image_link")
+                val productLink = response.getJSONObject(i).getString("product_link")
+
                 if(apiID == productApiId){
                     product = ProductDetails(id=0, apiID = apiID, name = productName, brand = brandName, price=productPrice, imageLink = productImage, type = productType)
-                    description.text = response.getJSONObject(i).getString("description")
-                   try {
+
+                    description.text = Jsoup.parse(response.getJSONObject(i).getString("description").toString().repeat(4)).text()
+                            ?: "no description"
+                    brand.text = brandName
+                    price.text = "$productPrice $priceSign"
+                    Picasso.with(this).load(productImage).resize(0, image.getHeight()).into(image)
+                    link.setOnClickListener {
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(productLink)
+                        startActivity(i)
+                    }
+
+                    try {
                        rate.text = response.getJSONObject(i).getDouble("rating").toString()
                    } catch (e: Exception) {
                        rate.text = "0.0"

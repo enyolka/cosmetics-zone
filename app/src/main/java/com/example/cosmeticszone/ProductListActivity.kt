@@ -81,7 +81,7 @@ class ProductListActivity : AppCompatActivity() {
 
             for (i in 0 until respCount) {
                 val apiID = response.getJSONObject(i).getInt("id")
-                val productName = response.getJSONObject(i).getString("name")
+                val productName = response.getJSONObject(i).getString("name").replace("\\s+".toRegex(), " ");
                 val brandName = response.getJSONObject(i).getString("brand")
                 val price = response.getJSONObject(i).getString("price")
                 val productImage = response.getJSONObject(i).getString("image_link")
