@@ -16,7 +16,7 @@ class ProductTypeAdapter(var dataSet: Array<Pair<String,Int>>, val context: Cont
 
         init {
             // Define click listener for the ViewHolder's View.
-            productTypeTextView = view.findViewById(R.id.productNameView)
+            productTypeTextView = view.findViewById(R.id.productNameListView)
             productTypeImage = view.findViewById(R.id.imageProductView)
         }
     }

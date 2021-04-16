@@ -18,8 +18,8 @@ class ProductListAdapter(var dataSet: Array<ProductDetails>, val context: Contex
 
         init {
             // Define click listener for the ViewHolder's View.
-            productTextView = view.findViewById(R.id.productNameView)
-            brandTextView = view.findViewById(R.id.brandNameView)
+            productTextView = view.findViewById(R.id.productNameListView)
+            brandTextView = view.findViewById(R.id.brandNameListView)
             productImage = view.findViewById(R.id.imageProductView)
         }
     }

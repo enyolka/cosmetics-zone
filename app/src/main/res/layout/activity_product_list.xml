@@ -29,7 +29,6 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="2"
-                    app:srcCompat="@drawable/logo1"
                     tools:srcCompat="@drawable/logo3" />
 
                 <TextView
