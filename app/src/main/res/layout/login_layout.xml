@@ -32,7 +32,7 @@
             android:autofillHints=""
             android:ems="10"
             android:gravity="center"
-            android:hint="@string/username"
+            android:hint="username"
             android:inputType="textPersonName" />
 
         <EditText
@@ -46,7 +46,7 @@
             android:autofillHints=""
             android:ems="10"
             android:gravity="center"
-            android:hint="@string/password"
+            android:hint="password"
             android:inputType="textPassword" />
 
         <Button
@@ -56,7 +56,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="24sp"
             android:width="200sp"
-            android:text="@string/sign_in"
+            android:text="sign in"
             app:backgroundTint="#EFA3C4" />
 
         <Button
@@ -66,7 +66,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="4sp"
             android:width="200sp"
-            android:text="@string/sign_up"
+            android:text="sign up"
             app:backgroundTint="#C1C1C1" />
 
         <ImageView
