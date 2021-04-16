@@ -23,53 +23,28 @@
             android:contentDescription="@string/logo"
             app:srcCompat="@drawable/logo1" />
 
-        <EditText
-            android:id="@+id/usernameEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="40sp"
-            android:layout_marginRight="60sp"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="@string/username"
-            android:inputType="textPersonName"
-            android:autofillHints="" />
-
-        <EditText
-            android:id="@+id/passwordEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="20sp"
-            android:layout_marginRight="60sp"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:autofillHints="" />
-
         <Button
-            android:id="@+id/signinButton"
+            android:id="@+id/productListButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="24sp"
+            android:layout_marginTop="80sp"
             android:width="200sp"
-            android:text="@string/sign_in"
-            app:backgroundTint="#EFA3C4" />
-
-        <Button
-            android:id="@+id/signupButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="4sp"
-            android:width="200sp"
-            android:text="@string/sign_up"
+            android:minHeight="52dip"
+            android:text="@string/products"
             app:backgroundTint="#C1C1C1" />
+
+        <Button
+            android:id="@+id/belovedProductsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16sp"
+            android:layout_marginBottom="48sp"
+            android:width="200sp"
+            android:minHeight="52dip"
+            android:text="@string/beloved_products"
+            app:backgroundTint="#EFA3C4" />
 
     </LinearLayout>
 

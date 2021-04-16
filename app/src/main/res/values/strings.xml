@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">CosmeticsZone</string>
-    <string name="password">Password</string>
-    <string name="sign_in">Sign in</string>
-    <string name="sign_up">Sign up</string>
-    <string name="username">Username</string>
     <string name="logo">logo</string>
     <string name="rating">Rating:</string>
     <string name="_0">0 $</string>
     <string name="_0_0">0.0</string>
+    <string name="products">Products</string>
+    <string name="beloved_products">Beloved products</string>
+    <string name="brak_ulubionych_produkt_w">Brak ulubionych produktów</string>
+    <string name="product_types">Product Types</string>
 </resources>
