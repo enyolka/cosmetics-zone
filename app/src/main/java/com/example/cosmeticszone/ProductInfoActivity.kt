@@ -111,7 +111,8 @@ class ProductInfoActivity : AppCompatActivity() {
                 val productType = response.getJSONObject(i).getString("product_type")
                 val productName = (response.getJSONObject(i).getString("name")).replace("\\s+".toRegex(), " ");
                 val productPrice = response.getJSONObject(i).getString("price")
-                val priceSign = response.getJSONObject(i).getString("price_sign") ?: "$"
+                var priceSign = response.getJSONObject(i).getString("price_sign")
+                if (priceSign == "null") priceSign = "$"
                 val productImage = response.getJSONObject(i).getString("image_link")
                 val productLink = response.getJSONObject(i).getString("product_link")
 
