@@ -38,15 +38,8 @@
                     android:layout_weight="5"
                     android:gravity="center_vertical"
                     android:paddingLeft="20dp"
-                    android:text="Product Types" />
+                    android:text="@string/product_types" />
 
-                <ImageView
-                    android:id="@+id/belovedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:paddingTop="4dp"
-                    app:srcCompat="@android:drawable/btn_star" />
             </LinearLayout>
         </TableRow>
 

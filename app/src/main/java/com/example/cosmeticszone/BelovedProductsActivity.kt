@@ -20,7 +20,6 @@ import org.json.JSONArray
 class BelovedProductsActivity : AppCompatActivity() {
 
     internal lateinit var productsList: RecyclerView
-    internal lateinit var belovedButton: ImageView
     internal lateinit var info: TextView
     internal lateinit var tvNoRecordsAvailable : TextView
 
@@ -29,7 +28,6 @@ class BelovedProductsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_beloved_products)
 
         productsList = findViewById(R.id.belovedListRecycler)
-        belovedButton = findViewById(R.id.belovedButton)
         info = findViewById((R.id.infoTextView))
         tvNoRecordsAvailable = findViewById(R.id.tvNoRecordsAvailable)
 
@@ -37,10 +35,6 @@ class BelovedProductsActivity : AppCompatActivity() {
 //        productsList.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false)
 //        productsList.adapter = adapter
 
-        belovedButton.setOnClickListener() {
-            val intent = Intent(this, BelovedProductsActivity::class.java)
-            this.startActivity(intent)
-        }
         setupListofDataIntoRecyclerView()
     }
     private fun setupListofDataIntoRecyclerView() {

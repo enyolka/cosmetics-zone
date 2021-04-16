@@ -39,15 +39,8 @@
                     android:layout_weight="5"
                     android:gravity="center_vertical"
                     android:paddingLeft="20dp"
-                    android:text="Product List" />
+                    android:text="@string/beloved_products" />
 
-                <ImageView
-                    android:id="@+id/belovedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:paddingTop="4dp"
-                    app:srcCompat="@android:drawable/btn_star" />
             </LinearLayout>
         </TableRow>
 
@@ -68,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Brak ulubionych produktów"
+                android:text="@string/brak_ulubionych_produkt_w"
                 android:layout_weight="1"
                 android:textSize="18sp"
                 android:visibility="gone"

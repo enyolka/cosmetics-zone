@@ -13,7 +13,6 @@ class ProductTypeActivity : AppCompatActivity() {
     private lateinit var queue: RequestQueue
     internal lateinit var productsTypeList: RecyclerView
     internal lateinit var adapter: ProductTypeAdapter
-    internal lateinit var belovedButton: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,15 +24,10 @@ class ProductTypeActivity : AppCompatActivity() {
         queue = Volley.newRequestQueue(this)
 
         productsTypeList = findViewById(R.id.productTypesRecycler)
-        belovedButton = findViewById(R.id.belovedButton)
 
         adapter = ProductTypeAdapter(productTypes, this)
         productsTypeList.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         productsTypeList.adapter = adapter
 
-        belovedButton.setOnClickListener() {
-            val intent = Intent(this, BelovedProductsActivity::class.java)
-            this.startActivity(intent)
-        }
     }
 }

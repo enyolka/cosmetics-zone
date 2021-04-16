@@ -28,8 +28,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="24sp"
+            android:layout_marginTop="80sp"
             android:width="200sp"
+            android:minHeight="52dip"
             android:text="@string/products"
             app:backgroundTint="#C1C1C1" />
 
@@ -38,8 +39,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="4sp"
+            android:layout_marginTop="16sp"
+            android:layout_marginBottom="48sp"
             android:width="200sp"
+            android:minHeight="52dip"
             android:text="@string/beloved_products"
             app:backgroundTint="#EFA3C4" />
 

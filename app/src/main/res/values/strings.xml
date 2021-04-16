@@ -6,4 +6,6 @@
     <string name="_0_0">0.0</string>
     <string name="products">Products</string>
     <string name="beloved_products">Beloved products</string>
+    <string name="brak_ulubionych_produkt_w">Brak ulubionych produktów</string>
+    <string name="product_types">Product Types</string>
 </resources>
