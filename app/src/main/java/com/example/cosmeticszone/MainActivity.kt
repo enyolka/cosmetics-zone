@@ -4,27 +4,28 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.EditText
 
 class MainActivity : AppCompatActivity() {
-    internal lateinit var signInButton: Button
-    internal lateinit var username: EditText
-    internal lateinit var password: EditText
+    internal lateinit var listButton: Button
+    internal lateinit var belovedButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        signInButton = findViewById(R.id.signinButton)
-        username = findViewById(R.id.usernameEditText)
-        password = findViewById(R.id.passwordEditText)
+        listButton = findViewById(R.id.productListButton)
+        belovedButton = findViewById(R.id.belovedProductsButton)
 
-        signInButton.setOnClickListener {
-//                if (username.text.isNotEmpty() && password.text.isNotEmpty()) {
-                    val intent = Intent(this, ProductTypeActivity::class.java)
-                this.startActivity(intent)
-//            }
+        listButton.setOnClickListener {
+            val intent = Intent(this, ProductTypeActivity::class.java)
+            this.startActivity(intent)
         }
+
+        belovedButton.setOnClickListener() {
+            val intent = Intent(this, BelovedProductsActivity::class.java)
+            this.startActivity(intent)
+        }
+        
 
     }
 
