@@ -2,8 +2,8 @@ package com.example.cosmeticszone
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,9 +20,11 @@ class ProductListActivity : AppCompatActivity() {
     private lateinit var queue: RequestQueue
     internal lateinit var productsList: RecyclerView
     internal lateinit var adapter: ProductListAdapter
-    internal lateinit var belovedButton: ImageView
+    //internal lateinit var belovedButton: ImageView
     internal lateinit var productType: String
     internal lateinit var info: TextView
+    internal lateinit var sortButton: Button
+    internal lateinit var sortSpinner: Spinner
     internal var listData: Array<ProductDetails> = emptyArray()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,20 +34,54 @@ class ProductListActivity : AppCompatActivity() {
         queue = Volley.newRequestQueue(this)
 
         productsList = findViewById(R.id.productListRecycler)
-        belovedButton = findViewById(R.id.belovedButton)
+//        belovedButton = findViewById(R.id.belovedButton)
         info = findViewById((R.id.infoTextView))
+        sortSpinner = findViewById(R.id.sortSpinner)
+        sortSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("default", "name", "price", "brand"))
+//        sortButton = findViewById(R.id.sortButton)
 
         adapter = ProductListAdapter(listData, this)
         productsList.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false)
         productsList.adapter = adapter
 
-        belovedButton.setOnClickListener() {
-            val intent = Intent(this, BelovedProductsActivity::class.java)
-            this.startActivity(intent)
-        }
+//        belovedButton.setOnClickListener() {
+//            val intent = Intent(this, BelovedProductsActivity::class.java)
+//            this.startActivity(intent)
+//        }
 
         productType = intent.getStringExtra("productType") ?: ""
         makeRequest(productType)
+
+        sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (sortSpinner.selectedItem == "name")
+                    adapter.dataSet =
+                        listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
+                            .toTypedArray()
+                else if (sortSpinner.selectedItem == "brand")
+                    adapter.dataSet =
+                        listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.brand }))
+                            .toTypedArray()
+                else if (sortSpinner.selectedItem == "price")
+                    adapter.dataSet =
+                        listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.price }))
+                            .toTypedArray()
+                else
+                    adapter.dataSet = listData
+
+                adapter.notifyDataSetChanged()
+            }
+
+        }
     }
 
     fun makeRequest(productType: String) {
@@ -91,7 +127,6 @@ class ProductListActivity : AppCompatActivity() {
                 tmpData[i] = productObject
             }
 
-//            this.listData += tmpData as Array<Triple<String, String, String>>
             this.listData += tmpData as Array<ProductDetails>
         }
     }
