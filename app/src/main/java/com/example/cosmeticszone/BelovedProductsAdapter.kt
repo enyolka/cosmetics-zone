@@ -7,7 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
@@ -17,12 +20,14 @@ class BelovedProductsAdapter(val context: Context, val dataSet: ArrayList<Produc
         var productTextView: TextView
         var brandTextView: TextView
         val productImage: ImageView
+        val deleteBelovedButton : TextView
 
         init {
             // Define click listener for the ViewHolder's View.
             productTextView = view.findViewById(R.id.productNameView)
             brandTextView = view.findViewById(R.id.brandNameView)
             productImage = view.findViewById(R.id.imageProductView)
+            deleteBelovedButton = view.findViewById(R.id.deleteBelovedButton)
         }
     }
 
@@ -42,15 +47,13 @@ class BelovedProductsAdapter(val context: Context, val dataSet: ArrayList<Produc
         holder.productTextView.text = item.name
         holder.brandTextView.text = item.brand
         Glide.with(context).load(item.imageLink).into(holder.productImage);
-
-
-//        holder.ivDelete.setOnClickListener { view ->
-//
-//            if (context is MainActivity) {
-//                context.deleteRecordAlertDialog(item)
-//            }
-//        }
-
+        holder.deleteBelovedButton.setTextColor("#D3D3D3".toColorInt())
+        holder.deleteBelovedButton.setOnClickListener{
+//            deleteRecordAlertDialog(dataSet[position])
+            if (context is BelovedProductsActivity) {
+                context.deleteRecordAlertDialog(item)
+            }
+        }
 
     }
 
@@ -63,7 +66,5 @@ class BelovedProductsAdapter(val context: Context, val dataSet: ArrayList<Produc
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
-
-
 
 }
