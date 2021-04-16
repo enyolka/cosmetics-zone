@@ -46,6 +46,15 @@
             android:text="@string/beloved_products"
             app:backgroundTint="#EFA3C4" />
 
+        <ImageView
+            android:id="@+id/belovedButton2"
+            android:layout_width="60dp"
+            android:layout_height="51dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:paddingTop="4dp"
+            app:srcCompat="@android:drawable/btn_star" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
