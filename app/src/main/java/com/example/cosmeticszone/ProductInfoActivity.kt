@@ -2,13 +2,14 @@ package com.example.cosmeticszone
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.Nullable
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
@@ -18,7 +19,7 @@ import com.android.volley.toolbox.Volley
 import com.squareup.picasso.Picasso
 import org.json.JSONArray
 import org.jsoup.Jsoup
-import java.lang.Exception
+
 
 class ProductInfoActivity : AppCompatActivity() {
     private lateinit var queue: RequestQueue
@@ -159,6 +160,17 @@ class ProductInfoActivity : AppCompatActivity() {
         if(databaseHandler.searchProduct(product.apiID) >= 0) {
             buttonBeloved.setImageResource(android.R.drawable.star_big_on)
         }
+    }
+
+    @Nullable
+    override fun getParentActivityIntent(): Intent? {
+        val intent = super.getParentActivityIntent()
+        intent?.let { enhanceParentActivityIntent(it) }
+        return intent
+    }
+
+    private fun enhanceParentActivityIntent(intent: Intent) {
+        intent.putExtra("productType", product.type)
     }
 
 }
