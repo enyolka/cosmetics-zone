@@ -16,12 +16,14 @@ class BelovedProductsAdapter(val context: Context, val dataSet: ArrayList<Produc
         var productTextView: TextView
         var brandTextView: TextView
         val productImage: ImageView
+        val deleteBelovedButton : TextView
 
         init {
             // Define click listener for the ViewHolder's View.
             productTextView = view.findViewById(R.id.productNameListView)
             brandTextView = view.findViewById(R.id.brandNameListView)
             productImage = view.findViewById(R.id.imageProductView)
+            deleteBelovedButton = view.findViewById(R.id.deleteBelovedButton)
         }
     }
 
@@ -42,13 +44,11 @@ class BelovedProductsAdapter(val context: Context, val dataSet: ArrayList<Produc
         holder.brandTextView.text = item.brand
         Glide.with(context).load(item.imageLink).into(holder.productImage);
 
-
-//        holder.ivDelete.setOnClickListener { view ->
-//
-//            if (context is MainActivity) {
-//                context.deleteRecordAlertDialog(item)
-//            }
-//        }
+        holder.deleteBelovedButton.setOnClickListener{
+            if (context is BelovedProductsActivity) {
+                context.deleteRecordAlertDialog(item)
+            }
+        }
 
 
     }

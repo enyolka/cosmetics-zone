@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -63,5 +65,38 @@ class BelovedProductsActivity : AppCompatActivity() {
         val prodList: ArrayList<ProductDetails> = databaseHandler.viewProducts()
 
         return prodList
+    }
+
+    fun deleteRecordAlertDialog(product: ProductDetails) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Usuń z ulubionych")
+        builder.setMessage("Jesteś pewien, że chcesz usunąć ${product.name} z listy?")
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+
+        builder.setPositiveButton("Tak") { dialogInterface, which ->
+
+            val databaseHandler: DatabaseHandler = DatabaseHandler(this)
+
+            val status = databaseHandler.deleteProducts(product)
+            if (status > -1) {
+                Toast.makeText(
+                        this,
+                        "Usunięto produkt",
+                        Toast.LENGTH_LONG
+                ).show()
+
+                setupListofDataIntoRecyclerView()
+            }
+
+            dialogInterface.dismiss() // Dialog will be dismissed
+        }
+
+        builder.setNegativeButton("Nie") { dialogInterface, which ->
+            dialogInterface.dismiss()
+        }
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 }

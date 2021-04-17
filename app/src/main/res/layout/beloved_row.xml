@@ -45,6 +45,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
+                android:layout_marginEnd="32sp"
+                android:layout_marginRight="32sp"
                 android:layout_marginBottom="4dp"
                 android:text="Product Name"
                 android:textSize="18sp"
@@ -59,6 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
+                android:layout_marginEnd="32sp"
+                android:layout_marginRight="32sp"
                 android:text="Brand Name"
                 android:textAllCaps="true"
                 android:textSize="10sp"
@@ -67,6 +71,18 @@
                 app:layout_constraintHorizontal_bias="0.1"
                 app:layout_constraintStart_toEndOf="@+id/imageProductView"
                 app:layout_constraintTop_toBottomOf="@+id/productNameListView" />
+
+            <TextView
+                android:id="@+id/deleteBelovedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10sp"
+                android:layout_marginRight="10sp"
+                android:text="@string/deleteBeloved"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/imageProductView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageProductView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

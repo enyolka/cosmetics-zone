@@ -120,4 +120,38 @@ class DatabaseHandler (context: Context) :
             db.close()
             return success
         }
+
+        fun deleteProductsAPIID(product: ProductDetails): Int {
+            val db = this.writableDatabase
+            val contentValues = ContentValues()
+            contentValues.put(KEY_APIID, product.apiID)
+
+            val success = db.delete(TABLE_PRODUCTS, KEY_APIID + "=" + product.apiID, null)
+
+            db.close()
+            return success
+        }
+
+        fun searchProduct(apiId: Int): Int {
+
+            val selectQuery = "SELECT  * FROM $TABLE_PRODUCTS WHERE $KEY_APIID=$apiId"
+
+            val db = this.readableDatabase
+
+            var cursor: Cursor? = null
+
+            try {
+                cursor = db.rawQuery(selectQuery, null)
+
+            } catch (e: SQLiteException) {
+                db.execSQL(selectQuery)
+                return -1
+            }
+
+            if (cursor.moveToFirst()) {
+                return cursor.getInt(cursor.getColumnIndex(KEY_ID))
+            }else{
+                return -1
+            }
+        }
 }
