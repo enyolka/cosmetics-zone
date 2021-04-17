@@ -49,13 +49,15 @@ class BelovedProductsAdapter(val context: Context, val dataSet: ArrayList<Produc
                 context.deleteRecordAlertDialog(item)
             }
         }
-
-
+        holder.itemView.setOnClickListener { goToDetails(item.apiID, item.brand, item.type, item.name) }
     }
 
-    private fun goToDetails(productID: Int) {
-        val intent = Intent(context, ProductListActivity::class.java).apply {
-            putExtra("productInfo", productID)
+    private fun goToDetails(productID: Int, productBrand: String, productType: String, productName: String) {
+        val intent = Intent(context, ProductInfoActivity::class.java).apply {
+            putExtra("productApiId", productID)
+            putExtra("productBrand", productBrand)
+            putExtra("productType", productType)
+            putExtra("productName", productName)
         }
         context.startActivity(intent)
     }
