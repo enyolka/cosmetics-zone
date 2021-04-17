@@ -60,11 +60,20 @@ class ProductInfoActivity : AppCompatActivity() {
     private fun addToBeloved() {
         val databaseHandler: DatabaseHandler = DatabaseHandler(this)
         if (product.name.isNotEmpty()) {
-            val status =
-                databaseHandler.addProduct(product)
-            if (status > -1) {
-                Toast.makeText(applicationContext, "Zapisano do ulubionych", Toast.LENGTH_LONG).show()
-                buttonBeloved.setImageResource(android.R.drawable.star_big_on)
+            if(databaseHandler.searchProduct(product.apiID) >= 0){
+                val status =
+                        databaseHandler.deleteProductsAPIID(product)
+                if (status > -1) {
+                    Toast.makeText(applicationContext, "Usunięto z ulubionych", Toast.LENGTH_LONG).show()
+                    buttonBeloved.setImageResource(android.R.drawable.btn_star_big_off)
+                }
+            }else{
+                val status =
+                        databaseHandler.addProduct(product)
+                if (status > -1) {
+                    Toast.makeText(applicationContext, "Zapisano do ulubionych", Toast.LENGTH_LONG).show()
+                    buttonBeloved.setImageResource(android.R.drawable.star_big_on)
+                }
             }
         } else {
             Toast.makeText(
@@ -101,6 +110,7 @@ class ProductInfoActivity : AppCompatActivity() {
 
         queue.add(productListRequest)
     }
+
     fun loadData(response: JSONArray?, productApiId: Int) {
         response?.let {
             val respCount = response.length()
@@ -135,13 +145,20 @@ class ProductInfoActivity : AppCompatActivity() {
                    } catch (e: Exception) {
                        rate.text = "0.0"
                    }
+                    initiateButtonBeloved()
                     return
                 }
                 if(i == respCount - 1)
                     product = ProductDetails(id=0, apiID = 0, name = "", brand = "", price="", imageLink = "", type = "")
                 }
             }
-
         }
 
+    private fun initiateButtonBeloved() {
+        val databaseHandler: DatabaseHandler = DatabaseHandler(this)
+        if(databaseHandler.searchProduct(product.apiID) >= 0) {
+            buttonBeloved.setImageResource(android.R.drawable.star_big_on)
+        }
     }
+
+}
