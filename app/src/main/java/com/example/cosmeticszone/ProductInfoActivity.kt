@@ -3,6 +3,7 @@ package com.example.cosmeticszone
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Layout
 import android.text.method.ScrollingMovementMethod
 import android.widget.Button
 import android.widget.ImageView
@@ -32,6 +33,7 @@ class ProductInfoActivity : AppCompatActivity() {
     internal lateinit var description: TextView
     internal lateinit var rate: TextView
     internal lateinit var link: Button
+    internal lateinit var layout: Layout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,7 @@ class ProductInfoActivity : AppCompatActivity() {
         queue = Volley.newRequestQueue(this)
 
         buttonBeloved = findViewById(R.id.buttonAddBeloved)
+        //layout = setContentView(R.layout.linearLayout)
         name = findViewById(R.id.productNameView)
         brand = findViewById(R.id.brandNameView)
         image = findViewById(R.id.productImageView)
@@ -66,14 +69,14 @@ class ProductInfoActivity : AppCompatActivity() {
                         databaseHandler.deleteProductsAPIID(product)
                 if (status > -1) {
                     Toast.makeText(applicationContext, "Usunięto z ulubionych", Toast.LENGTH_LONG).show()
-                    buttonBeloved.setImageResource(android.R.drawable.btn_star_big_off)
+                    buttonBeloved.setImageResource(R.drawable.heart_empty)
                 }
             }else{
                 val status =
                         databaseHandler.addProduct(product)
                 if (status > -1) {
                     Toast.makeText(applicationContext, "Zapisano do ulubionych", Toast.LENGTH_LONG).show()
-                    buttonBeloved.setImageResource(android.R.drawable.star_big_on)
+                    buttonBeloved.setImageResource(R.drawable.heart_pink)
                 }
             }
         } else {
@@ -130,7 +133,7 @@ class ProductInfoActivity : AppCompatActivity() {
                 if(apiID == productApiId){
                     product = ProductDetails(id=0, apiID = apiID, name = productName, brand = brandName, price=productPrice, imageLink = productImage, type = productType)
 
-                    description.text = Jsoup.parse(response.getJSONObject(i).getString("description").toString().repeat(4)).text()
+                    description.text = Jsoup.parse(response.getJSONObject(i).getString("description").toString().repeat(1)).text()
                             ?: "no description"
                     brand.text = brandName
                     price.text = "$productPrice $priceSign"
@@ -158,7 +161,7 @@ class ProductInfoActivity : AppCompatActivity() {
     private fun initiateButtonBeloved() {
         val databaseHandler: DatabaseHandler = DatabaseHandler(this)
         if(databaseHandler.searchProduct(product.apiID) >= 0) {
-            buttonBeloved.setImageResource(android.R.drawable.star_big_on)
+            buttonBeloved.setImageResource(R.drawable.heart_pink)
         }
     }
 
