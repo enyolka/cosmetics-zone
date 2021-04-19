@@ -1,5 +1,6 @@
 package com.example.cosmeticszone
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -24,8 +25,19 @@ class ProductListActivity : AppCompatActivity() {
     internal lateinit var productType: String
     internal lateinit var info: TextView
     internal lateinit var sortButton: Button
+    internal lateinit var filterView: ImageView
     internal lateinit var sortSpinner: Spinner
+
     internal var listData: Array<ProductDetails> = emptyArray()
+    internal var listBrands: Array<FilterDetails> = emptyArray()
+    internal var listCategories: MutableList<String> = ArrayList()
+    internal var listCategory: Array<FilterDetails> = emptyArray()
+    internal var listTags: MutableList<String> = ArrayList()
+    internal var listTag: Array<FilterDetails> = emptyArray()
+    internal var priceFrom: String = "0"
+    internal var priceTo: String = "0"
+    internal var ratingFrom: String = "0"
+    internal var ratingTo: String = "0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +51,8 @@ class ProductListActivity : AppCompatActivity() {
         sortSpinner = findViewById(R.id.sortSpinner)
         sortSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("default", "name", "price", "brand"))
 //        sortButton = findViewById(R.id.sortButton)
+
+        filterView = findViewById(R.id.goFilterProducts)
 
         adapter = ProductListAdapter(listData, this)
         productsList.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false)
@@ -92,7 +106,7 @@ class ProductListActivity : AppCompatActivity() {
             Request.Method.GET, url, null,
             Response.Listener {
                     response ->
-                loadData(response)
+                loadData(response, false)
                 adapter.dataSet = listData
                 adapter.notifyDataSetChanged()
             },
@@ -110,10 +124,23 @@ class ProductListActivity : AppCompatActivity() {
         queue.add(productListRequest)
     }
 
-    fun loadData(response: JSONArray?) {
+    fun loadData(response: JSONArray?, filter: Boolean) {
         response?.let {
             val respCount = response.length()
             val tmpData = arrayOfNulls<ProductDetails>(respCount)
+            var brandsOn = true
+            var categoryOn = true
+            var inCategory: MutableList<Int> = ArrayList()
+            var inBrand: MutableList<Int> = ArrayList()
+
+            if(filter){
+                if(listBrands.all { it -> !it.choose }){
+                    brandsOn = false
+                }
+                if(listCategory.all { it -> !it.choose }){
+                    categoryOn = false
+                }
+            }
 
             for (i in 0 until respCount) {
                 val apiID = response.getJSONObject(i).getInt("id")
@@ -125,9 +152,152 @@ class ProductListActivity : AppCompatActivity() {
                 val productObject = ProductDetails(id=0, apiID = apiID, name = productName, brand = brandName, price=price, imageLink = productImage, type = this.productType)//, description = description, rate = rate, product_link = product_link, website_link = website_link)
 
                 tmpData[i] = productObject
+
+                val category = response.getJSONObject(i).getString("category")
+
+                if(!filter){
+                    if(!category.isNullOrEmpty() && category != "null" && !listCategories.contains(category)){
+                        listCategories.add(category)
+                    }
+                    val tags = response.getJSONObject(i).getJSONArray("tag_list")
+                    val tagArray = Array(tags.length()){
+                        tags.getString(it)
+                    }
+                    tagArray.forEach { item -> if(!listTags.contains(item) && !item.isNullOrEmpty()) listTags.add(item) }
+
+                }else{
+                    if(brandsOn && listBrands.any{it -> it.choose && it.name == brandName }){
+                        inBrand.add(apiID)
+                    }
+                    if(categoryOn && listCategory.any{it -> it.choose && it.name == category }){
+                        inCategory.add(apiID)
+                    }
+                }
+            }
+            if(filter){
+                var tmpFiltered: Array<ProductDetails?> = tmpData
+                if(brandsOn){
+                    tmpFiltered = tmpData.filter { it -> it!!.apiID in inBrand }.toTypedArray()
+                }
+                if(categoryOn){
+                    tmpFiltered = tmpFiltered.filter { it -> it!!.apiID in inCategory }.toTypedArray()
+                }
+                this.listData = tmpFiltered as Array<ProductDetails>
             }
 
-            this.listData += tmpData as Array<ProductDetails>
+            if(!filter){
+                this.listData += tmpData as Array<ProductDetails>
+                chooseFilters()
+            }
         }
+    }
+
+    private fun chooseFilters() {
+        val brandsList = listData.map { it.brand }.distinct() //.toTypedArray()
+//        val brands = brandslist.zip(BooleanArray(brandslist.size){it -> false}.toList()).toTypedArray()
+        val brands = arrayOfNulls<FilterDetails>(brandsList.size)
+        for (i in 0 until brandsList.size) {
+
+            val brand =  FilterDetails("brand", brandsList[i], false)
+
+            brands[i] = brand
+        }
+        this.listBrands = brands as Array<FilterDetails>
+
+        val categories = arrayOfNulls<FilterDetails>(listCategories.size)
+        for (i in 0 until listCategories.size) {
+
+            val category =  FilterDetails("category", listCategories[i], false)
+
+            categories[i] = category
+        }
+        this.listCategory = categories as Array<FilterDetails>
+
+        val tags = arrayOfNulls<FilterDetails>(listTags.size)
+        for (i in 0 until listTags.size) {
+
+            val tag =  FilterDetails("tag", listTags[i], false)
+
+            tags[i] = tag
+        }
+        this.listTag = tags as Array<FilterDetails>
+
+        filterView.setOnClickListener{
+            val intent = Intent(this, FilterActivity::class.java).apply {
+                putExtra("listBrand", listBrands)
+                putExtra("listCategory", listCategory)
+                putExtra("listTags", listTag)
+                putExtra("priceFrom", priceFrom)
+                putExtra("priceTo", priceTo)
+                putExtra("ratingFrom", ratingFrom)
+                putExtra("ratingTo", ratingTo)
+            }
+            this.startActivityForResult(intent, 1)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Check that it is the SecondActivity with an OK result
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                // Get String data from Intent
+                this.listBrands = data!!.getSerializableExtra("filterBrand") as Array<FilterDetails>
+                this.listCategory = data!!.getSerializableExtra("filterCategories") as Array<FilterDetails>
+                this.listTag = data!!.getSerializableExtra("filterTags") as Array<FilterDetails>
+                this.priceFrom = data!!.getStringExtra("priceFrom").toString()
+                this.priceTo = data!!.getStringExtra("priceTo").toString()
+                this.ratingFrom = data!!.getStringExtra("ratingFrom").toString()
+                this.ratingTo = data!!.getStringExtra("ratingTo").toString()
+
+                makeFilterRequest()
+
+            }
+        }
+    }
+
+    private fun makeFilterRequest() {
+        var filterPostfix = "product_type=$productType"
+        if(listTag.any { it -> it.choose }){
+            listTag.forEach { it -> if(it.choose) filterPostfix+="&product_tags=${it.name}," }
+            filterPostfix = filterPostfix.substring(0, filterPostfix.length - 1)
+        }
+        if(priceFrom!="null" && (priceFrom.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || priceFrom.matches("0\\.?\\d*".toRegex()))){
+            filterPostfix += "&price_greater_than=${priceFrom}"
+        }
+        if(priceTo!="null" && (priceTo.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || priceTo.matches("0\\.?\\d*".toRegex()))){
+            filterPostfix += "&price_less_than=${priceTo}"
+        }
+        if(ratingFrom!="null" && (ratingFrom.toString().matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingFrom.matches("0\\.?\\d*".toRegex()))){
+            filterPostfix += "&rating_greater_than=${ratingFrom}"
+        }
+        if(ratingTo!="null" && (ratingTo.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingTo.matches("0\\.?\\d*".toRegex()))){
+            filterPostfix += "&rating_less_than=${ratingTo}"
+        }
+
+        val url = "http://makeup-api.herokuapp.com/api/v1/products.json?$filterPostfix"
+
+        val productListRequest = JsonArrayRequest(
+                Request.Method.GET, url, null,
+                Response.Listener {
+                    response ->
+                    loadData(response, true)
+                    adapter.dataSet = listData
+                    adapter.notifyDataSetChanged()
+                },
+                Response.ErrorListener {
+                    println(it)
+                    println("Error")
+                }
+        )
+        productListRequest.retryPolicy = DefaultRetryPolicy(
+                5000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+
+        queue.add(productListRequest)
     }
 }
