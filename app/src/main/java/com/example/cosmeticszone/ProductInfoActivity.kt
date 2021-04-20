@@ -1,5 +1,6 @@
 package com.example.cosmeticszone
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -68,21 +69,21 @@ class ProductInfoActivity : AppCompatActivity() {
                 val status =
                         databaseHandler.deleteProductsAPIID(product)
                 if (status > -1) {
-                    Toast.makeText(applicationContext, "Usunięto z ulubionych", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Deleted form beloved", Toast.LENGTH_LONG).show()
                     buttonBeloved.setImageResource(R.drawable.heart_empty)
                 }
             }else{
                 val status =
                         databaseHandler.addProduct(product)
                 if (status > -1) {
-                    Toast.makeText(applicationContext, "Zapisano do ulubionych", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Added to beloved", Toast.LENGTH_LONG).show()
                     buttonBeloved.setImageResource(R.drawable.heart_pink)
                 }
             }
         } else {
             Toast.makeText(
                 applicationContext,
-                "Dodawanie do ulubionych nie powiodło się",
+                "Add to beloved failed",
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -169,6 +170,7 @@ class ProductInfoActivity : AppCompatActivity() {
     override fun getParentActivityIntent(): Intent? {
         val intent = super.getParentActivityIntent()
         intent?.let { enhanceParentActivityIntent(it) }
+        setResult(Activity.RESULT_OK, intent)
         return intent
     }
 

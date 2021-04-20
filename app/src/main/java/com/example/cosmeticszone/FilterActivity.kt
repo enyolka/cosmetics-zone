@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.text.FieldPosition
@@ -37,27 +38,40 @@ class FilterActivity : AppCompatActivity() {
         priceTo = findViewById(R.id.priceTo)
         ratingFrom = findViewById(R.id.ratingFrom)
         ratingTo = findViewById(R.id.ratingTo)
-        priceFrom.hint = "from"
-        priceTo.hint = "to"
-        ratingFrom.hint = "from"
-        ratingTo.hint = "to"
+//        priceFrom.hint = "from"
+//        priceTo.hint = "to"
+//        ratingFrom.hint = "from"
+//        ratingTo.hint = "to"
 
         listBrand = intent.getSerializableExtra("listBrand") as Array<FilterDetails>
         listCategories = intent.getSerializableExtra("listCategory") as Array<FilterDetails>
         listTags = intent.getSerializableExtra("listTags") as Array<FilterDetails>
 
-//        if(intent.getStringExtra("priceFrom") != "0") {
-//            priceFrom.setText(intent.getStringExtra("priceFrom").toString())
-//        }
-//        if(intent.getStringExtra("priceTo") != "0") {
-//            priceFrom.setText( intent.getStringExtra("priceTo").toString())
-//        }
-//        if(intent.getStringExtra("ratingFrom") != "0") {
-//            priceFrom.setText( intent.getStringExtra("ratingFrom").toString())
-//        }
-//        if(intent.getStringExtra("ratingTo") != "0") {
-//            priceFrom.setText( intent.getStringExtra("ratingTo").toString())
-//        }
+        var priceF = intent.getStringExtra("priceFrom").toString()
+        var priceT = intent.getStringExtra("priceTo").toString()
+        var ratingF = intent.getStringExtra("ratingFrom").toString()
+        var ratingT = intent.getStringExtra("ratingTo").toString()
+
+        if(priceF != "0" && !priceF.isNullOrEmpty()) {
+            priceFrom.setText(priceF)
+        } else{
+            priceFrom.hint = "from"
+        }
+        if(priceT != "0" && !priceT.isNullOrEmpty()) {
+            priceTo.setText( priceT)
+        } else{
+            priceTo.hint = "to"
+        }
+        if(ratingF != "0" && !ratingF.isNullOrEmpty()) {
+            ratingFrom.setText( ratingF)
+        } else{
+            ratingFrom.hint = "from"
+        }
+        if(ratingT != "0" && !ratingT.isNullOrEmpty()) {
+            ratingTo.setText( ratingT)
+        } else{
+            ratingTo.hint = "to"
+        }
 
         adapterBrand = FilterActivityAdapter(listBrand, this)
         brandRecyclerView.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false)
@@ -75,16 +89,28 @@ class FilterActivity : AppCompatActivity() {
     }
 
     private fun filterProducts() {
-        val intent = Intent()
-        intent.putExtra("filterBrand", listBrand)
-        intent.putExtra("filterCategories", listCategories)
-        intent.putExtra("filterTags", listTags)
-        intent.putExtra("priceFrom", priceFrom.text.toString())
-        intent.putExtra("priceTo", priceTo.text.toString())
-        intent.putExtra("ratingFrom", ratingFrom.text.toString())
-        intent.putExtra("ratingTo", ratingTo.text.toString())
-        setResult(Activity.RESULT_OK, intent)
-        finish()
+        var priceFilterOk = true
+        var ratingFilterOk = true
+        if(!priceFrom.text.toString().isNullOrEmpty() && !priceTo.text.toString().isNullOrEmpty() && priceFrom.text.toString().toDouble() > priceTo.text.toString().toDouble()){
+            priceFilterOk = false
+        }
+        if(!ratingFrom.text.toString().isNullOrEmpty() && !ratingTo.text.toString().isNullOrEmpty() && ratingFrom.text.toString().toDouble() > ratingTo.text.toString().toDouble()){
+            ratingFilterOk = false
+        }
+        if(ratingFilterOk && priceFilterOk){
+            val intent = Intent()
+            intent.putExtra("filterBrand", listBrand)
+            intent.putExtra("filterCategories", listCategories)
+            intent.putExtra("filterTags", listTags)
+            intent.putExtra("priceFrom", priceFrom.text.toString())
+            intent.putExtra("priceTo", priceTo.text.toString())
+            intent.putExtra("ratingFrom", ratingFrom.text.toString())
+            intent.putExtra("ratingTo", ratingTo.text.toString())
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        }else{
+            Toast.makeText(applicationContext, "Wrong price or rating", Toast.LENGTH_LONG).show()
+        }
     }
 
     fun changeChoice(product: FilterDetails, position: Int){
