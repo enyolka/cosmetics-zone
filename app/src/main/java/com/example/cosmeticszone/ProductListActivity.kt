@@ -49,7 +49,7 @@ class ProductListActivity : AppCompatActivity() {
         nothingLoaded = findViewById(R.id.nothingLoadedView)
         nothingLoaded.text = "No data to display"
         sortSpinner = findViewById(R.id.sortSpinner)
-        sortSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("-", "name", "price", "brand"))
+        sortSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf(" - ",  "price  ↑", "price  ↓", "name  ↑", "name  ↓", "brand  ↑", "brand  ↓"))
 
         filterView = findViewById(R.id.goFilterProducts)
 
@@ -67,18 +67,34 @@ class ProductListActivity : AppCompatActivity() {
                     position: Int,
                     id: Long
             ) {
-                if (sortSpinner.selectedItem == "name")
+                if (sortSpinner.selectedItem == "name  ↑")
                     adapter.dataSet =
                             listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
                                     .toTypedArray()
-                else if (sortSpinner.selectedItem == "brand")
+                if (sortSpinner.selectedItem == "name  ↓")
+                    adapter.dataSet =
+                            listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name })).asReversed()
+                                    .toTypedArray()
+                else if (sortSpinner.selectedItem == "brand  ↑")
                     adapter.dataSet =
                             listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.brand }))
                                     .toTypedArray()
-                else if (sortSpinner.selectedItem == "price")
+                else if (sortSpinner.selectedItem == "brand  ↓")
                     adapter.dataSet =
-                            listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.price!! }))
+                            listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.brand })).asReversed()
                                     .toTypedArray()
+                else if (sortSpinner.selectedItem == "price  ↑")
+                    adapter.dataSet =
+                            listData.sortedBy { when(it.price) {
+                                "null" -> 0.0
+                                else -> it.price?.toDouble()
+                            }}.toTypedArray()
+                else if (sortSpinner.selectedItem == "price  ↓")
+                    adapter.dataSet =
+                            listData.sortedBy { when(it.price) {
+                                "null" -> 0.0
+                                else -> it.price?.toDouble()
+                            }}.asReversed().toTypedArray()
                 else
                     adapter.dataSet = listData
 
