@@ -36,6 +36,14 @@ class ProductInfoActivity : AppCompatActivity() {
     internal lateinit var link: Button
     internal lateinit var layout: Layout
 
+    internal var listBrand: Array<FilterDetails> = emptyArray()
+    internal var listCategories: Array<FilterDetails> = emptyArray()
+    internal var listTags: Array<FilterDetails> = emptyArray()
+    internal var priceFrom: String = "0"
+    internal var priceTo: String = "0"
+    internal var ratingFrom: String = "0"
+    internal var ratingTo: String = "0"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_info)
@@ -57,6 +65,18 @@ class ProductInfoActivity : AppCompatActivity() {
         var productBrand = intent.getStringExtra("productBrand") ?: ""
         var productApiId = intent.getIntExtra("productApiId", 0)
         var productType = intent.getStringExtra("productType") ?: ""
+
+//        if(this.parent is ProductListActivity ) {
+//            println(priceFrom)
+        listBrand = intent.getSerializableExtra("listBrand") as Array<FilterDetails>
+        listCategories = intent.getSerializableExtra("listCategory") as Array<FilterDetails>
+        listTags = intent?.getSerializableExtra("listTags") as Array<FilterDetails>
+
+        priceFrom = intent.getStringExtra("priceFrom") ?: "0"
+        priceTo = intent.getStringExtra("priceTo") ?: "0"
+        ratingFrom = intent.getStringExtra("ratingFrom") ?: "0"
+        ratingTo = intent.getStringExtra("ratingTo") ?: "0"
+//        }
 
         makeRequest(productType, productBrand, productApiId)
 
@@ -176,6 +196,15 @@ class ProductInfoActivity : AppCompatActivity() {
 
     private fun enhanceParentActivityIntent(intent: Intent) {
         intent.putExtra("productType", product.type)
+//        if(this.parent is ProductListActivity ){
+        intent.putExtra("filterBrand", listBrand)
+        intent.putExtra("filterCategories", listCategories)
+        intent.putExtra("filterTags", listTags)
+        intent.putExtra("priceFrom", priceFrom)
+        intent.putExtra("priceTo", priceTo)
+        intent.putExtra("ratingFrom", ratingFrom)
+        intent.putExtra("ratingTo", ratingTo)
+//        }
     }
 
 }

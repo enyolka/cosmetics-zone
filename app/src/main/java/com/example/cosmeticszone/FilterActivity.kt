@@ -38,10 +38,6 @@ class FilterActivity : AppCompatActivity() {
         priceTo = findViewById(R.id.priceTo)
         ratingFrom = findViewById(R.id.ratingFrom)
         ratingTo = findViewById(R.id.ratingTo)
-//        priceFrom.hint = "from"
-//        priceTo.hint = "to"
-//        ratingFrom.hint = "from"
-//        ratingTo.hint = "to"
 
         listBrand = intent.getSerializableExtra("listBrand") as Array<FilterDetails>
         listCategories = intent.getSerializableExtra("listCategory") as Array<FilterDetails>

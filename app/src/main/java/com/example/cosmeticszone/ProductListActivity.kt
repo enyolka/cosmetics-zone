@@ -256,6 +256,9 @@ class ProductListActivity : AppCompatActivity() {
 
             }
         }
+        if(requestCode == 2){
+            makeFilterRequest()
+        }
     }
 
     private fun makeFilterRequest() {
@@ -270,7 +273,7 @@ class ProductListActivity : AppCompatActivity() {
         if(priceTo!="null" && (priceTo.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || priceTo.matches("0\\.?\\d*".toRegex()))){
             filterPostfix += "&price_less_than=${priceTo}"
         }
-        if(ratingFrom!="null" && (ratingFrom.toString().matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingFrom.matches("0\\.?\\d*".toRegex()))){
+        if(ratingFrom!="null" && (ratingFrom.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingFrom.matches("0\\.?\\d*".toRegex()))){
             filterPostfix += "&rating_greater_than=${ratingFrom}"
         }
         if(ratingTo!="null" && (ratingTo.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingTo.matches("0\\.?\\d*".toRegex()))){
@@ -299,5 +302,23 @@ class ProductListActivity : AppCompatActivity() {
         )
 
         queue.add(productListRequest)
+    }
+
+    fun goToDetails(productID: Int, productBrand: String, productType: String, productName: String) {
+        val intent = Intent(this, ProductInfoActivity::class.java).apply {
+            putExtra("productApiId", productID)
+            putExtra("productBrand", productBrand)
+            putExtra("productType", productType)
+            putExtra("productName", productName)
+
+            putExtra("listBrand", listBrands)
+            putExtra("listCategory", listCategory)
+            putExtra("listTags", listTag)
+            putExtra("priceFrom", priceFrom)
+            putExtra("priceTo", priceTo)
+            putExtra("ratingFrom", ratingFrom)
+            putExtra("ratingTo", ratingTo)
+        }
+        startActivityForResult(intent,2)
     }
 }

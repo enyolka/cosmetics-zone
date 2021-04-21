@@ -103,6 +103,10 @@ class BelovedProductsActivity : AppCompatActivity() {
             putExtra("productBrand", productBrand)
             putExtra("productType", productType)
             putExtra("productName", productName)
+
+            putExtra("listBrand", emptyArray<FilterDetails>())
+            putExtra("listCategory", emptyArray<FilterDetails>())
+            putExtra("listTags", emptyArray<FilterDetails>())
         }
         startActivityForResult(intent,1)
     }

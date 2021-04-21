@@ -45,18 +45,23 @@ class ProductListAdapter(var dataSet: Array<ProductDetails>, val context: Contex
 //        viewHolder.productImage.setImageResource(android.R.drawable.ic_menu_crop)
         Glide.with(context).load(product.imageLink).into(viewHolder.productImage);
 
-        viewHolder.itemView.setOnClickListener { goToDetails(product.apiID, product.brand, product.type, product.name) }
+//        viewHolder.itemView.setOnClickListener { goToDetails(product.apiID, product.brand, product.type, product.name) }
+        viewHolder.itemView.setOnClickListener {
+            if (context is ProductListActivity) {
+                context.goToDetails(product.apiID, product.brand, product.type, product.name)
+            }
+        }
     }
 
-    private fun goToDetails(productID: Int, productBrand: String, productType: String, productName: String) {
-        val intent = Intent(context, ProductInfoActivity::class.java).apply {
-            putExtra("productApiId", productID)
-            putExtra("productBrand", productBrand)
-            putExtra("productType", productType)
-            putExtra("productName", productName)
-        }
-        context.startActivity(intent)
-    }
+//    private fun goToDetails(productID: Int, productBrand: String, productType: String, productName: String) {
+//        val intent = Intent(context, ProductInfoActivity::class.java).apply {
+//            putExtra("productApiId", productID)
+//            putExtra("productBrand", productBrand)
+//            putExtra("productType", productType)
+//            putExtra("productName", productName)
+//        }
+//        context.startActivity(intent)
+//    }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
