@@ -240,7 +240,7 @@ class ProductListActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         // Check that it is the SecondActivity with an OK result
-        if (requestCode == 1) {
+        if (requestCode == 1 || requestCode == 2) {
             if (resultCode == Activity.RESULT_OK) {
 
                 // Get String data from Intent
@@ -256,27 +256,25 @@ class ProductListActivity : AppCompatActivity() {
 
             }
         }
-        if(requestCode == 2){
-            makeFilterRequest()
-        }
     }
 
     private fun makeFilterRequest() {
         var filterPostfix = "product_type=$productType"
         if(listTag.any { it -> it.choose }){
-            listTag.forEach { it -> if(it.choose) filterPostfix+="&product_tags=${it.name}," }
+            filterPostfix += "&product_tags="
+            listTag.forEach { it -> if(it.choose) filterPostfix+="${it.name}," }
             filterPostfix = filterPostfix.substring(0, filterPostfix.length - 1)
         }
-        if(priceFrom!="null" && (priceFrom.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || priceFrom.matches("0\\.?\\d*".toRegex()))){
+        if(priceFrom!="null" && (priceFrom.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || priceFrom.matches("0\\.?[1-9]\\d*".toRegex()))){
             filterPostfix += "&price_greater_than=${priceFrom}"
         }
-        if(priceTo!="null" && (priceTo.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || priceTo.matches("0\\.?\\d*".toRegex()))){
+        if(priceTo!="null" && (priceTo.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || priceTo.matches("0\\.?[1-9]\\d*".toRegex()))){
             filterPostfix += "&price_less_than=${priceTo}"
         }
-        if(ratingFrom!="null" && (ratingFrom.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingFrom.matches("0\\.?\\d*".toRegex()))){
+        if(ratingFrom!="null" && (ratingFrom.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingFrom.matches("0\\.?[1-9]\\d*".toRegex()))){
             filterPostfix += "&rating_greater_than=${ratingFrom}"
         }
-        if(ratingTo!="null" && (ratingTo.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingTo.matches("0\\.?\\d*".toRegex()))){
+        if(ratingTo!="null" && (ratingTo.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingTo.matches("0\\.?[1-9]\\d*".toRegex()))){
             filterPostfix += "&rating_less_than=${ratingTo}"
         }
 

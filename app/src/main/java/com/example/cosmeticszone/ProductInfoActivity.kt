@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Layout
 import android.text.method.ScrollingMovementMethod
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -66,8 +67,6 @@ class ProductInfoActivity : AppCompatActivity() {
         var productApiId = intent.getIntExtra("productApiId", 0)
         var productType = intent.getStringExtra("productType") ?: ""
 
-//        if(this.parent is ProductListActivity ) {
-//            println(priceFrom)
         listBrand = intent.getSerializableExtra("listBrand") as Array<FilterDetails>
         listCategories = intent.getSerializableExtra("listCategory") as Array<FilterDetails>
         listTags = intent?.getSerializableExtra("listTags") as Array<FilterDetails>
@@ -76,7 +75,6 @@ class ProductInfoActivity : AppCompatActivity() {
         priceTo = intent.getStringExtra("priceTo") ?: "0"
         ratingFrom = intent.getStringExtra("ratingFrom") ?: "0"
         ratingTo = intent.getStringExtra("ratingTo") ?: "0"
-//        }
 
         makeRequest(productType, productBrand, productApiId)
 
@@ -186,17 +184,16 @@ class ProductInfoActivity : AppCompatActivity() {
         }
     }
 
-    @Nullable
-    override fun getParentActivityIntent(): Intent? {
-        val intent = super.getParentActivityIntent()
-        intent?.let { enhanceParentActivityIntent(it) }
-        setResult(Activity.RESULT_OK, intent)
-        return intent
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            android.R.id.home -> enhanceParentActivityIntent()
+        }
+        return true
     }
 
-    private fun enhanceParentActivityIntent(intent: Intent) {
+    private fun enhanceParentActivityIntent() {
+        val intent = Intent()
         intent.putExtra("productType", product.type)
-//        if(this.parent is ProductListActivity ){
         intent.putExtra("filterBrand", listBrand)
         intent.putExtra("filterCategories", listCategories)
         intent.putExtra("filterTags", listTags)
@@ -204,7 +201,9 @@ class ProductInfoActivity : AppCompatActivity() {
         intent.putExtra("priceTo", priceTo)
         intent.putExtra("ratingFrom", ratingFrom)
         intent.putExtra("ratingTo", ratingTo)
-//        }
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
+
 
 }
