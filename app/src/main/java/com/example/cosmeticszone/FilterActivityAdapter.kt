@@ -51,14 +51,7 @@ class FilterActivityAdapter(var dataSet: Array<FilterDetails>, val context: Cont
                 context.changeChoice(product, position)
             }
         }
-//        viewHolder.itemView.setOnClickListener { changeFilter(product) }
     }
-
-//    private fun changeFilter(product: Pair<String, Boolean>) {
-//        if(product.second){
-//
-//        }
-//    }
 
 
     // Return the size of your dataset (invoked by the layout manager)

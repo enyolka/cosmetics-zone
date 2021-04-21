@@ -50,22 +50,22 @@ class FilterActivity : AppCompatActivity() {
 
         if(priceF != "0" && !priceF.isNullOrEmpty()) {
             priceFrom.setText(priceF)
-        } else{
+        } else {
             priceFrom.hint = "from"
         }
         if(priceT != "0" && !priceT.isNullOrEmpty()) {
             priceTo.setText( priceT)
-        } else{
+        } else {
             priceTo.hint = "to"
         }
         if(ratingF != "0" && !ratingF.isNullOrEmpty()) {
             ratingFrom.setText( ratingF)
-        } else{
+        } else {
             ratingFrom.hint = "from"
         }
         if(ratingT != "0" && !ratingT.isNullOrEmpty()) {
             ratingTo.setText( ratingT)
-        } else{
+        } else {
             ratingTo.hint = "to"
         }
 
@@ -104,7 +104,7 @@ class FilterActivity : AppCompatActivity() {
             intent.putExtra("ratingTo", ratingTo.text.toString())
             setResult(Activity.RESULT_OK, intent)
             finish()
-        }else{
+        } else {
             Toast.makeText(applicationContext, "Wrong price or rating", Toast.LENGTH_LONG).show()
         }
     }

@@ -52,7 +52,6 @@ class ProductInfoActivity : AppCompatActivity() {
         queue = Volley.newRequestQueue(this)
 
         buttonBeloved = findViewById(R.id.buttonAddBeloved)
-        //layout = setContentView(R.layout.linearLayout)
         name = findViewById(R.id.productNameView)
         brand = findViewById(R.id.brandNameView)
         image = findViewById(R.id.productImageView)
@@ -107,6 +106,7 @@ class ProductInfoActivity : AppCompatActivity() {
         }
     }
 
+
     fun makeRequest(productType: String, productBrand: String, productApiId: Int) {
 
         val url = "http://makeup-api.herokuapp.com/api/v1/products.json?brand=%s&product_type=%s".format(productBrand, productType)
@@ -134,6 +134,7 @@ class ProductInfoActivity : AppCompatActivity() {
         queue.add(productListRequest)
     }
 
+
     fun loadData(response: JSONArray?, productApiId: Int) {
         response?.let {
             val respCount = response.length()
@@ -143,7 +144,8 @@ class ProductInfoActivity : AppCompatActivity() {
                 val brandName = response.getJSONObject(i).getString("brand")
                 val productType = response.getJSONObject(i).getString("product_type")
                 val productName = (response.getJSONObject(i).getString("name")).replace("\\s+".toRegex(), " ");
-                val productPrice = response.getJSONObject(i).getString("price")
+                var productPrice = response.getJSONObject(i).getString("price")
+                if (productPrice == "null") productPrice = "0"
                 var priceSign = response.getJSONObject(i).getString("price_sign")
                 if (priceSign == "null") priceSign = "$"
                 val productImage = response.getJSONObject(i).getString("image_link")

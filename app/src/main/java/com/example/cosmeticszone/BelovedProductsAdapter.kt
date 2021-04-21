@@ -56,19 +56,6 @@ class BelovedProductsAdapter(val context: Context, val dataSet: ArrayList<Produc
         }
     }
 
-//    private fun goToDetails(productID: Int, productBrand: String, productType: String, productName: String) {
-//        val intent = Intent(context, ProductInfoActivity::class.java).apply {
-//            putExtra("productApiId", productID)
-//            putExtra("productBrand", productBrand)
-//            putExtra("productType", productType)
-//            putExtra("productName", productName)
-//        }
-//        context.startActivity(intent)
-//    }
-
-    // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
-
-
 
 }
