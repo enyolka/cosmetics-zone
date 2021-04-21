@@ -10,4 +10,6 @@
     <string name="product_types">Product Types</string>
     <string name="deleteBeloved">𝗫</string>
     <string name="go_to_the_store">Go to the store</string>
+    <string name="sort">Sort:</string>
+    <string name="product_list">Product List</string>
 </resources>
