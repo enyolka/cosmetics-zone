@@ -1,5 +1,6 @@
 package com.example.cosmeticszone
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -33,10 +34,6 @@ class BelovedProductsActivity : AppCompatActivity() {
         info = findViewById((R.id.infoTextView))
         tvNoRecordsAvailable = findViewById(R.id.tvNoRecordsAvailable)
 
-//        adapter = BelovedProductsAdapter(listData, this)
-//        productsList.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false)
-//        productsList.adapter = adapter
-
         setupListofDataIntoRecyclerView()
     }
     private fun setupListofDataIntoRecyclerView() {
@@ -69,11 +66,11 @@ class BelovedProductsActivity : AppCompatActivity() {
 
     fun deleteRecordAlertDialog(product: ProductDetails) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Usuń z ulubionych")
-        builder.setMessage("Jesteś pewien, że chcesz usunąć ${product.name} z listy?")
+        builder.setTitle("Delete from beloved")
+        builder.setMessage("Are you sure you want to delete ${product.name} from list?")
         builder.setIcon(android.R.drawable.ic_dialog_alert)
 
-        builder.setPositiveButton("Tak") { dialogInterface, which ->
+        builder.setPositiveButton("Yes") { dialogInterface, which ->
 
             val databaseHandler: DatabaseHandler = DatabaseHandler(this)
 
@@ -81,7 +78,7 @@ class BelovedProductsActivity : AppCompatActivity() {
             if (status > -1) {
                 Toast.makeText(
                         this,
-                        "Usunięto produkt",
+                        "Deleted product",
                         Toast.LENGTH_LONG
                 ).show()
 
@@ -91,12 +88,37 @@ class BelovedProductsActivity : AppCompatActivity() {
             dialogInterface.dismiss() // Dialog will be dismissed
         }
 
-        builder.setNegativeButton("Nie") { dialogInterface, which ->
+        builder.setNegativeButton("No") { dialogInterface, which ->
             dialogInterface.dismiss()
         }
 
         val alertDialog: AlertDialog = builder.create()
         alertDialog.setCancelable(false)
         alertDialog.show()
+    }
+
+    fun goToDetails(productID: Int, productBrand: String, productType: String, productName: String) {
+        val intent = Intent(this, ProductInfoActivity::class.java).apply {
+            putExtra("productApiId", productID)
+            putExtra("productBrand", productBrand)
+            putExtra("productType", productType)
+            putExtra("productName", productName)
+
+            putExtra("listBrand", emptyArray<FilterDetails>())
+            putExtra("listCategory", emptyArray<FilterDetails>())
+            putExtra("listTags", emptyArray<FilterDetails>())
+        }
+        startActivityForResult(intent,1)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Check that it is the SecondActivity with an OK result
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                setupListofDataIntoRecyclerView()
+            }
+        }
     }
 }

@@ -49,18 +49,22 @@ class BelovedProductsAdapter(val context: Context, val dataSet: ArrayList<Produc
                 context.deleteRecordAlertDialog(item)
             }
         }
-        holder.itemView.setOnClickListener { goToDetails(item.apiID, item.brand, item.type, item.name) }
+        holder.itemView.setOnClickListener {
+            if (context is BelovedProductsActivity) {
+                context.goToDetails(item.apiID, item.brand, item.type, item.name)
+            }
+        }
     }
 
-    private fun goToDetails(productID: Int, productBrand: String, productType: String, productName: String) {
-        val intent = Intent(context, ProductInfoActivity::class.java).apply {
-            putExtra("productApiId", productID)
-            putExtra("productBrand", productBrand)
-            putExtra("productType", productType)
-            putExtra("productName", productName)
-        }
-        context.startActivity(intent)
-    }
+//    private fun goToDetails(productID: Int, productBrand: String, productType: String, productName: String) {
+//        val intent = Intent(context, ProductInfoActivity::class.java).apply {
+//            putExtra("productApiId", productID)
+//            putExtra("productBrand", productBrand)
+//            putExtra("productType", productType)
+//            putExtra("productName", productName)
+//        }
+//        context.startActivity(intent)
+//    }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size

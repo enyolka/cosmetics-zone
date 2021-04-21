@@ -1,10 +1,12 @@
 package com.example.cosmeticszone
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Layout
 import android.text.method.ScrollingMovementMethod
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -35,6 +37,14 @@ class ProductInfoActivity : AppCompatActivity() {
     internal lateinit var link: Button
     internal lateinit var layout: Layout
 
+    internal var listBrand: Array<FilterDetails> = emptyArray()
+    internal var listCategories: Array<FilterDetails> = emptyArray()
+    internal var listTags: Array<FilterDetails> = emptyArray()
+    internal var priceFrom: String = "0"
+    internal var priceTo: String = "0"
+    internal var ratingFrom: String = "0"
+    internal var ratingTo: String = "0"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_info)
@@ -57,6 +67,15 @@ class ProductInfoActivity : AppCompatActivity() {
         var productApiId = intent.getIntExtra("productApiId", 0)
         var productType = intent.getStringExtra("productType") ?: ""
 
+        listBrand = intent.getSerializableExtra("listBrand") as Array<FilterDetails>
+        listCategories = intent.getSerializableExtra("listCategory") as Array<FilterDetails>
+        listTags = intent?.getSerializableExtra("listTags") as Array<FilterDetails>
+
+        priceFrom = intent.getStringExtra("priceFrom") ?: "0"
+        priceTo = intent.getStringExtra("priceTo") ?: "0"
+        ratingFrom = intent.getStringExtra("ratingFrom") ?: "0"
+        ratingTo = intent.getStringExtra("ratingTo") ?: "0"
+
         makeRequest(productType, productBrand, productApiId)
 
     }
@@ -68,21 +87,21 @@ class ProductInfoActivity : AppCompatActivity() {
                 val status =
                         databaseHandler.deleteProductsAPIID(product)
                 if (status > -1) {
-                    Toast.makeText(applicationContext, "Usunięto z ulubionych", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Deleted form beloved", Toast.LENGTH_LONG).show()
                     buttonBeloved.setImageResource(R.drawable.heart_empty)
                 }
             }else{
                 val status =
                         databaseHandler.addProduct(product)
                 if (status > -1) {
-                    Toast.makeText(applicationContext, "Zapisano do ulubionych", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Added to beloved", Toast.LENGTH_LONG).show()
                     buttonBeloved.setImageResource(R.drawable.heart_pink)
                 }
             }
         } else {
             Toast.makeText(
                 applicationContext,
-                "Dodawanie do ulubionych nie powiodło się",
+                "Add to beloved failed",
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -165,15 +184,26 @@ class ProductInfoActivity : AppCompatActivity() {
         }
     }
 
-    @Nullable
-    override fun getParentActivityIntent(): Intent? {
-        val intent = super.getParentActivityIntent()
-        intent?.let { enhanceParentActivityIntent(it) }
-        return intent
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            android.R.id.home -> enhanceParentActivityIntent()
+        }
+        return true
     }
 
-    private fun enhanceParentActivityIntent(intent: Intent) {
+    private fun enhanceParentActivityIntent() {
+        val intent = Intent()
         intent.putExtra("productType", product.type)
+        intent.putExtra("filterBrand", listBrand)
+        intent.putExtra("filterCategories", listCategories)
+        intent.putExtra("filterTags", listTags)
+        intent.putExtra("priceFrom", priceFrom)
+        intent.putExtra("priceTo", priceTo)
+        intent.putExtra("ratingFrom", ratingFrom)
+        intent.putExtra("ratingTo", ratingTo)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
+
 
 }
