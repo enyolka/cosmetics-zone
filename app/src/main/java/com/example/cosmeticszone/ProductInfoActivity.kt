@@ -144,21 +144,22 @@ class ProductInfoActivity : AppCompatActivity() {
                 val brandName = response.getJSONObject(i).getString("brand")
                 val productType = response.getJSONObject(i).getString("product_type")
                 val productName = (response.getJSONObject(i).getString("name")).replace("\\s+".toRegex(), " ");
-                var productPrice = response.getJSONObject(i).getString("price")
-                if (productPrice == "null") productPrice = "0"
+                var productPrice = response.getJSONObject(i)?.getString("price")
+                if (productPrice == "null") productPrice = "-"
                 var priceSign = response.getJSONObject(i).getString("price_sign")
                 if (priceSign == "null") priceSign = "$"
                 val productImage = response.getJSONObject(i).getString("image_link")
                 val productLink = response.getJSONObject(i).getString("product_link")
+                var productDescription = Jsoup.parse(response.getJSONObject(i)?.getString("description").toString()).text()
+                if (productDescription == "null")  productDescription = "no description"
 
                 if(apiID == productApiId){
                     product = ProductDetails(id=0, apiID = apiID, name = productName, brand = brandName, price=productPrice, imageLink = productImage, type = productType)
-
-                    description.text = Jsoup.parse(response.getJSONObject(i).getString("description").toString().repeat(1)).text()
-                            ?: "no description"
+                    description.text = productDescription
                     brand.text = brandName
                     price.text = "$productPrice $priceSign"
                     Picasso.with(this).load(productImage).resize(0, image.getHeight()).into(image)
+
                     link.setOnClickListener {
                         val i = Intent(Intent.ACTION_VIEW)
                         i.data = Uri.parse(productLink)

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.DefaultRetryPolicy
@@ -17,15 +16,17 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 
+
 class ProductListActivity : AppCompatActivity() {
     private lateinit var queue: RequestQueue
     internal lateinit var productsList: RecyclerView
     internal lateinit var adapter: ProductListAdapter
+    //internal lateinit var belovedButton: ImageView
     internal lateinit var productType: String
     internal lateinit var info: TextView
+    internal lateinit var sortButton: Button
     internal lateinit var filterView: ImageView
     internal lateinit var sortSpinner: Spinner
-    internal lateinit var nothingLoaded : TextView
 
     internal var listData: Array<ProductDetails> = emptyArray()
     internal var listBrands: Array<FilterDetails> = emptyArray()
@@ -45,11 +46,11 @@ class ProductListActivity : AppCompatActivity() {
         queue = Volley.newRequestQueue(this)
 
         productsList = findViewById(R.id.productListRecycler)
+//        belovedButton = findViewById(R.id.belovedButton)
         info = findViewById((R.id.infoTextView))
-        nothingLoaded = findViewById(R.id.nothingLoadedView)
-        nothingLoaded.text = "No data to display"
         sortSpinner = findViewById(R.id.sortSpinner)
-        sortSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("-", "name", "price", "brand"))
+        sortSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("default", "name", "price", "brand"))
+//        sortButton = findViewById(R.id.sortButton)
 
         filterView = findViewById(R.id.goFilterProducts)
 
@@ -57,88 +58,67 @@ class ProductListActivity : AppCompatActivity() {
         productsList.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false)
         productsList.adapter = adapter
 
+
         productType = intent.getStringExtra("productType") ?: ""
-        makeRequest(false)
+        makeRequest(productType)
 
         sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //
+            }
+
             override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
             ) {
                 if (sortSpinner.selectedItem == "name")
                     adapter.dataSet =
-                            listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
-                                    .toTypedArray()
+                        listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
+                            .toTypedArray()
                 else if (sortSpinner.selectedItem == "brand")
                     adapter.dataSet =
-                            listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.brand }))
-                                    .toTypedArray()
+                        listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.brand }))
+                            .toTypedArray()
                 else if (sortSpinner.selectedItem == "price")
                     adapter.dataSet =
-                            listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.price }))
-                                    .toTypedArray()
+                        listData.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.price!! }))
+                            .toTypedArray()
                 else
                     adapter.dataSet = listData
 
                 adapter.notifyDataSetChanged()
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                //
-            }
         }
-
     }
 
-
-    private fun makeRequest(filter: Boolean) {
-        var filterPostfix = "product_type=$productType"
-
-        if(listTag.any { it -> it.choose }){
-            filterPostfix += "&product_tags="
-            listTag.forEach { it -> if(it.choose) filterPostfix+="${it.name}," }
-            filterPostfix = filterPostfix.substring(0, filterPostfix.length - 1)
-        }
-        if(priceFrom!="null" && (priceFrom.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || priceFrom.matches("0\\.?[1-9]\\d*".toRegex()))){
-            filterPostfix += "&price_greater_than=${priceFrom}"
-        }
-        if(priceTo!="null" && (priceTo.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || priceTo.matches("0\\.?[1-9]\\d*".toRegex()))){
-            filterPostfix += "&price_less_than=${priceTo}"
-        }
-        if(ratingFrom!="null" && (ratingFrom.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingFrom.matches("0\\.?[1-9]\\d*".toRegex()))){
-            filterPostfix += "&rating_greater_than=${ratingFrom}"
-        }
-        if(ratingTo!="null" && (ratingTo.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingTo.matches("0\\.?[1-9]\\d*".toRegex()))){
-            filterPostfix += "&rating_less_than=${ratingTo}"
-        }
-
-        val url = "http://makeup-api.herokuapp.com/api/v1/products.json?$filterPostfix"
+    fun makeRequest(productType: String) {
+        //queue = Volley.newRequestQueue(this)
+        val url = "http://makeup-api.herokuapp.com/api/v1/products.json?product_type=$productType"
 
         val productListRequest = JsonArrayRequest(
-                Request.Method.GET, url, null,
-                Response.Listener {
+            Request.Method.GET, url, null,
+            Response.Listener {
                     response ->
-                    loadData(response, filter)
-                    adapter.dataSet = listData
-                    adapter.notifyDataSetChanged()
-                    nothingLoaded.isVisible = listData.isEmpty()
-                },
-                Response.ErrorListener {
-                    println(it)
-                    println("Error")
-                }
+                loadData(response, false)
+                adapter.dataSet = listData
+                adapter.notifyDataSetChanged()
+            },
+            Response.ErrorListener {
+                println(it)
+                println("Error")
+            }
         )
         productListRequest.retryPolicy = DefaultRetryPolicy(
-                5000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            5000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         )
 
         queue.add(productListRequest)
     }
-
 
     fun loadData(response: JSONArray?, filter: Boolean) {
         response?.let {
@@ -181,7 +161,7 @@ class ProductListActivity : AppCompatActivity() {
                     }
                     tagArray.forEach { item -> if(!listTags.contains(item) && !item.isNullOrEmpty()) listTags.add(item) }
 
-                } else {
+                }else{
                     if(brandsOn && listBrands.any{it -> it.choose && it.name == brandName }){
                         inBrand.add(apiID)
                     }
@@ -208,27 +188,32 @@ class ProductListActivity : AppCompatActivity() {
         }
     }
 
-
     private fun chooseFilters() {
-        val brandsList = listData.map { it.brand }.distinct()
+        val brandsList = listData.map { it.brand }.distinct() //.toTypedArray()
+//        val brands = brandslist.zip(BooleanArray(brandslist.size){it -> false}.toList()).toTypedArray()
         val brands = arrayOfNulls<FilterDetails>(brandsList.size)
-
         for (i in 0 until brandsList.size) {
+
             val brand =  FilterDetails("brand", brandsList[i], false)
+
             brands[i] = brand
         }
         this.listBrands = brands as Array<FilterDetails>
 
         val categories = arrayOfNulls<FilterDetails>(listCategories.size)
         for (i in 0 until listCategories.size) {
+
             val category =  FilterDetails("category", listCategories[i], false)
+
             categories[i] = category
         }
         this.listCategory = categories as Array<FilterDetails>
 
         val tags = arrayOfNulls<FilterDetails>(listTags.size)
         for (i in 0 until listTags.size) {
+
             val tag =  FilterDetails("tag", listTags[i], false)
+
             tags[i] = tag
         }
         this.listTag = tags as Array<FilterDetails>
@@ -247,13 +232,14 @@ class ProductListActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        // Check that it is the SecondActivity with an OK result
         if (requestCode == 1 || requestCode == 2) {
             if (resultCode == Activity.RESULT_OK) {
 
+                // Get String data from Intent
                 this.listBrands = data!!.getSerializableExtra("filterBrand") as Array<FilterDetails>
                 this.listCategory = data!!.getSerializableExtra("filterCategories") as Array<FilterDetails>
                 this.listTag = data!!.getSerializableExtra("filterTags") as Array<FilterDetails>
@@ -262,11 +248,55 @@ class ProductListActivity : AppCompatActivity() {
                 this.ratingFrom = data!!.getStringExtra("ratingFrom").toString()
                 this.ratingTo = data!!.getStringExtra("ratingTo").toString()
 
-                makeRequest(true)
+                makeFilterRequest()
+
             }
         }
     }
 
+    private fun makeFilterRequest() {
+        var filterPostfix = "product_type=$productType"
+        if(listTag.any { it -> it.choose }){
+            filterPostfix += "&product_tags="
+            listTag.forEach { it -> if(it.choose) filterPostfix+="${it.name}," }
+            filterPostfix = filterPostfix.substring(0, filterPostfix.length - 1)
+        }
+        if(priceFrom!="null" && (priceFrom.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || priceFrom.matches("0\\.?[1-9]\\d*".toRegex()))){
+            filterPostfix += "&price_greater_than=${priceFrom}"
+        }
+        if(priceTo!="null" && (priceTo.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || priceTo.matches("0\\.?[1-9]\\d*".toRegex()))){
+            filterPostfix += "&price_less_than=${priceTo}"
+        }
+        if(ratingFrom!="null" && (ratingFrom.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingFrom.matches("0\\.?[1-9]\\d*".toRegex()))){
+            filterPostfix += "&rating_greater_than=${ratingFrom}"
+        }
+        if(ratingTo!="null" && (ratingTo.matches("[1-9]+\\d*\\.?\\d*$".toRegex()) || ratingTo.matches("0\\.?[1-9]\\d*".toRegex()))){
+            filterPostfix += "&rating_less_than=${ratingTo}"
+        }
+
+        val url = "http://makeup-api.herokuapp.com/api/v1/products.json?$filterPostfix"
+
+        val productListRequest = JsonArrayRequest(
+                Request.Method.GET, url, null,
+                Response.Listener {
+                    response ->
+                    loadData(response, true)
+                    adapter.dataSet = listData
+                    adapter.notifyDataSetChanged()
+                },
+                Response.ErrorListener {
+                    println(it)
+                    println("Error")
+                }
+        )
+        productListRequest.retryPolicy = DefaultRetryPolicy(
+                5000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+
+        queue.add(productListRequest)
+    }
 
     fun goToDetails(productID: Int, productBrand: String, productType: String, productName: String) {
         val intent = Intent(this, ProductInfoActivity::class.java).apply {
